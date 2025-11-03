@@ -101,6 +101,20 @@ new Vue({
     computed: {
         lessonsInBasket() {
             return this.basket.length || 0;
+        }, 
+        isCheckoutFormValid(){
+            const nameCheck =  /^[a-zA-Z ]*$/;
+            const phoneCheck = /^[0-9]+$/;
+
+            return (
+                nameCheck.test(this.order.firstName) &&
+                nameCheck.test(this.order.surname) &&
+                phoneCheck.test(this.order.phone) &&
+                this.order.address &&  
+                this.order.city &&  
+                this.order.postcode &&  
+                this.order.email
+            );
         }
     },
     methods: {
@@ -113,15 +127,20 @@ new Vue({
         },
         addLessonToBasket(lesson) {
             if (lesson.space_available > 0) {
-                this.basket.push(lesson);
+                this.basket.push({lesson});
                 lesson.space_available--;
             }
-        }, 
+        },
+        removeLesson(index, lesson){
+            this.basket.splice(index,1);
+            lesson.space_available++;
+        },
 
         submitOrder(){
-            if(this.isFormValid){
+            if(this.isCheckoutFormValid){
                 console.log(`Thank you, ${this.order.name}! for placing an order with us`);
-                this.order = {name:"", phone:""};
+                this.order = {firstName:"", surname:"", phone:"", address:"", city:"", 
+                    postcode:"", email:""};
                 this.basket = [];
                 this.showLessons = true;
             } else {
