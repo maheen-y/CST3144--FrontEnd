@@ -1,3 +1,5 @@
+// this is a test comment
+
 new Vue({
     el: "#app",
     data: {
